@@ -1,12 +1,20 @@
-﻿# CMakeList.txt : CMake project for DesktopRadar, include source and define
-# project specific logic here.
-#
+﻿cmake_minimum_required(VERSION 3.16)
+project(DesktopRadar)
 
-# Add source to this project's executable.
-add_executable (DesktopRadar "DesktopRadar.cpp" "DesktopRadar.h")
+# Use SFML via vcpkg
+find_package(SFML CONFIG REQUIRED COMPONENTS Graphics Window System)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET DesktopRadar PROPERTY CXX_STANDARD 20)
-endif()
+# Collect all .cpp files
+file(GLOB_RECURSE SOURCES "src/*.cpp")
 
-# TODO: Add tests and install targets if needed.
+# Add executable
+add_executable(DesktopRadar ${SOURCES})
+
+# Include custom headers (if needed)
+target_include_directories(DesktopRadar PRIVATE include)
+
+# Link SFML
+target_link_libraries(DesktopRadar PRIVATE SFML::Graphics SFML::Window SFML::System)
+
+# Use C++20
+set_property(TARGET DesktopRadar PROPERTY CXX_STANDARD 20)
