@@ -9,11 +9,9 @@ using namespace std;
 
 int main()
 {
-	// Test GeoUtils using Haversine example from
-	// https://en.wikipedia.org/wiki/Haversine_formula#Example
 	GeoUtils::Coordinate a{ 38.898, -77.037 }; // D.C.
 	GeoUtils::Coordinate b{ 48.858, 2.294 };  // Paris
-	double d = GeoUtils::dist_between_points(a, b, Constants::Units::Kilometers);
-	std::cout << "Distance: " << d << " mi\n";
+	auto box = GeoUtils::calc_bounded_box(a, 100, Constants::Units::Miles);
+	std::cout << box.to_string() << '\n';
 	return 0;
 }

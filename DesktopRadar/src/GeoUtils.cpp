@@ -69,7 +69,27 @@ namespace GeoUtils {
 		double theta_rad = lat_deg * Constants::DEG_TO_RAD;
 		return Constants::DEG_TO_RAD * radius * std::cos(theta_rad);
 	}
-	
+	GeoUtils::BoundedBox calc_bounded_box(Coordinate center_coord, double radius, Constants::Units unit) {
+		// Given a coordinate and a radius in km/miles, this calculates the bounding box for the OpenSky API.
+		// This is done by calculating the upper and lower bounds for latitude and longitude to make a square.
+		// For more API information, see FlightTracker.hpp
+		double delta_lat = radius / dist_per_deg_lat(1, unit); // Degrees of latitude per mile
+		double delta_lon = radius / dist_per_deg_lon(center_coord.lat, unit); // Degrees of longitude per mile. Dependent on latitude.
+		// Bounds:
+		double lat_min = center_coord.lat - delta_lat;
+		double lat_max = center_coord.lat + delta_lat;
+		double lon_min = center_coord.lon - delta_lon;
+		double lon_max = center_coord.lon + delta_lon;
+		// Area IN SQUARE DEGREES, NOT MILES/KM.
+		double area_sq_deg = (lat_max - lat_min) * (lon_max - lon_min);
+		return GeoUtils::BoundedBox(
+		  lat_min,
+		  lat_max,
+		  lon_min,
+		  lon_max,
+		  area_sq_deg);
+	}
+	// DMS Handling:
 	std::optional<GeoUtils::Coordinate> GeoUtils::Coordinate::from_dms(const std::string& dms_string)
 	{
 		// This regex is simple: it consists of three capture groups for each value and a fourth for direction. The rest is accounting for formatting.
@@ -104,10 +124,20 @@ namespace GeoUtils {
 			throw std::invalid_argument("Invalid DMS format: " + coord_str);
 		}
 	}
+	// To Strings:
 	std::string GeoUtils::Coordinate::to_string() const {
 		std::ostringstream oss;
 		oss.precision(6);
 		oss << std::fixed << lat << ", " << lon;
+		return oss.str();
+	}
+	std::string GeoUtils::BoundedBox::to_string() const {
+		std::ostringstream oss;
+		oss.precision(6);
+		oss << std::fixed;
+		oss << "lamin: " << lat_min << ", lamax: " << lat_max << ", "
+			<< "lomin: " << lon_min << ", lomax: " << lon_max << ", "
+			<< "area_deg²: " << area_deg_sq;
 		return oss.str();
 	}
 }
