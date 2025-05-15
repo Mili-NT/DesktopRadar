@@ -13,7 +13,7 @@ add_executable(DesktopRadar ${SOURCES})
 # Include custom headers (if needed)
 target_include_directories(DesktopRadar PRIVATE include)
 
-# Link SFML
+# Link SFML (corrected)
 target_link_libraries(DesktopRadar PRIVATE SFML::Graphics SFML::Window SFML::System)
 
 # Use C++20
