@@ -50,7 +50,7 @@ namespace GeoUtils {
 	}
 	double dist_per_deg_lat(double deg, Constants::Units unit) {
 		// Meridian distance per degree of latitude:
-		// m(?) = (? / 180)R?_degrees = R?_radians           m(\Theta) = \frac{\pi }{180^{\circ }}R_{degrees} = R\Theta_{radians}
+		// m(θ) = (π / 180)Rθ_degrees = Rθ_radians           m(\Theta) = \frac{\pi }{180^{\circ }}R_{degrees} = R\Theta_{radians}
 		// Where:
 		//	R = the mean radius of the earth
 		double radius = (unit == Constants::Units::Miles)
@@ -61,10 +61,10 @@ namespace GeoUtils {
 	}
 	double dist_per_deg_lon(double lat_deg, Constants::Units unit) {
 		// Distance per degree of longitude:
-		// ?1_long = (? / 180)acos?                          (\Delta^{1}_{long} = \frac{\pi }{180}\alpha\cos\Theta)
+		// Δ1_long = (π / 180)acos?                          (\Delta^{1}_{long} = \frac{\pi }{180}\alpha\cos\Theta)
 		// Where:
 		//	a = radius of sphere
-		//	? = latitude in radians
+		//	φ = latitude in radians
 		double radius = (unit == Constants::Units::Miles) ? Constants::EARTH_RADIUS_MILES : Constants::EARTH_RADIUS_KM;
 		double theta_rad = lat_deg * Constants::DEG_TO_RAD;
 		return Constants::DEG_TO_RAD * radius * std::cos(theta_rad);
@@ -77,7 +77,7 @@ namespace GeoUtils {
 		// 48°51'30"N 2°17'40"E
 		// 48° 51′ 30.24″ N, 2° 17′ 40.2″ E
 		// 48d51m30.24sN 2d17m40.2sE
-		std::regex pattern(R"((\d{1,3})°?[dD]? ?(\d{1,2})[\'′]?[mM]? ?(\d{1,2}\.?\d*)["″]?[sS]? ?([NSEW]))");
+		std::regex pattern(R"((\d{1,3})°?[dD]? ?(\d{1,2})[\'′]?[mM]? ?(\d{1,2}\.?\d*)["″]?[sS]? ?([nsewNSEW]))");
 		std::sregex_iterator iter(dms_string.begin(), dms_string.end(), pattern);
 		std::sregex_iterator end;
 
